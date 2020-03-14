@@ -14,3 +14,5 @@
 
 
 3. Dashboard will be accessible from https://<b>$Master_ip</b>:30080/
+
+4. Dashboard token will be available at <b>$Master_IP:/root/dashboard-token.txt</b>

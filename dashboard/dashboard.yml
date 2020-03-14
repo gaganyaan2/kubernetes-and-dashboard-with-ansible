@@ -10,10 +10,12 @@
 
     - name: Create admin-user Service Account
       shell: |
+        curl -O https://raw.githubusercontent.com/koolwithk/kubernetes-and-dashboard-with-ansible/master/dashboard/admin.yml        
         kubectl apply -f admin.yml
     
     - name: apply admin roles
       shell: |
+        curl -O https://raw.githubusercontent.com/koolwithk/kubernetes-and-dashboard-with-ansible/master/dashboard/admin-role.yml
         kubectl apply -f admin-role.yml
 
     - name: get the admin dashboard token 
