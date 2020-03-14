@@ -1,25 +1,25 @@
 - hosts: all
   tasks:
-   - name: install Docker
+   - name: Install Docker
      yum:
        name: docker
        state: present
        update_cache: true
 
-   - name: start and enable Docker
+   - name: Start and enable Docker
      service:
        name: docker
        state: started
        enabled: yes
 
-   - name: disable SELinux
+   - name: Disable SELinux
      command: setenforce 0
 
-   - name: disable SELinux on reboot
+   - name: Disable SELinux on reboot
      selinux:
        state: disabled
 
-   - name: stop and disable Firewalld
+   - name: Stop and disable Firewalld
      service:
        name: firewalld
        state: stopped

@@ -13,12 +13,12 @@
         curl -O https://raw.githubusercontent.com/koolwithk/kubernetes-and-dashboard-with-ansible/master/dashboard/admin.yml        
         kubectl apply -f admin.yml
     
-    - name: apply admin roles
+    - name: Apply admin roles
       shell: |
         curl -O https://raw.githubusercontent.com/koolwithk/kubernetes-and-dashboard-with-ansible/master/dashboard/admin-role.yml
         kubectl apply -f admin-role.yml
 
-    - name: get the admin dashboard token 
+    - name: Get the admin dashboard token 
       shell: |
         kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}') > dashboard-token.txt
     
