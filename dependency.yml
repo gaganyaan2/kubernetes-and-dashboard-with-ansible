@@ -1,0 +1,85 @@
+- hosts: all
+  tasks:
+   - name: install Docker
+     yum:
+       name: docker
+       state: present
+       update_cache: true
+
+   - name: start and enable Docker
+     service:
+       name: docker
+       state: started
+       enabled: yes
+
+   - name: disable SELinux
+     command: setenforce 0
+
+   - name: disable SELinux on reboot
+     selinux:
+       state: disabled
+
+   - name: stop and disable Firewalld
+     service:
+       name: firewalld
+       state: stopped
+       enabled: no
+       
+   - name: ensure net.bridge.bridge-nf-call-ip6tables is set to 1
+     sysctl:
+      name: net.bridge.bridge-nf-call-ip6tables
+      value: 1
+      state: present
+
+   - name: ensure net.bridge.bridge-nf-call-iptables is set to 1
+     sysctl:
+      name: net.bridge.bridge-nf-call-iptables
+      value: 1
+      state: present
+
+   - name: Disable and trun off swap
+     shell: |
+       swapoff -a
+       swapline=$(cat -n /etc/fstab | grep swap | awk '{print $1}')
+       if [ $(cat /etc/fstab | grep swap | awk '{print substr($0,0,1)}') != "#" ]
+       then
+       sed -i ""$swapline"s/.*/#&/" /etc/fstab
+       fi
+
+   - name: Add Kubernetes repository
+     yum_repository:
+      name: kubernetes
+      description: Kubernetes repository
+      baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+      gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+      gpgcheck: yes
+
+   - name: install kubelet
+     yum:
+        name: kubelet
+        state: present
+        update_cache: true
+
+   - name: install kubeadm
+     yum:
+        name: kubeadm
+        state: present
+
+   - name: start and enable kubelet
+     service:
+       name: kubelet
+       state: started
+       enabled: yes
+
+- hosts: master
+  tasks:
+   - name: install kubectl
+     yum:
+        name: kubelet
+        state: present
+
+   - name: start and enable and enable kubelet
+     service:
+       name: kubelet
+       state: started
+       enabled: yes

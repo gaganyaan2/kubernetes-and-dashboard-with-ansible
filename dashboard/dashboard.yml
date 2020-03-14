@@ -1,0 +1,22 @@
+- hosts: master
+  tasks:
+    - name: Apply kubernetes dashboard 
+      shell: |
+        yum -y install curl
+        curl -O https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-rc5/aio/deploy/recommended.yaml
+        sed -i '43i\     \ nodePort: 30080' recommended.yaml
+        sed -i '44i\ \ type: NodePort' recommended.yaml
+        kubectl apply  -f recommended.yaml
+
+    - name: Create admin-user Service Account
+      shell: |
+        kubectl apply -f admin.yml
+    
+    - name: apply admin roles
+      shell: |
+        kubectl apply -f admin-role.yml
+
+    - name: get the admin dashboard token 
+      shell: |
+        kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}') > dashboard-token.txt
+    

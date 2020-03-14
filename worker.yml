@@ -1,0 +1,15 @@
+- hosts: master
+  gather_facts: false
+  tasks:
+    - name: get join command
+      shell: kubeadm token create --print-join-command
+      register: worker_join_command
+
+    - name: set join command
+      set_fact:
+        worker_join_command: "{{ worker_join_command.stdout_lines[0] }}"
+
+- hosts: workers
+  tasks:
+    - name: join cluster
+      shell: "{{ hostvars['master'].worker_join_command }} >> worker_joined.txt"
