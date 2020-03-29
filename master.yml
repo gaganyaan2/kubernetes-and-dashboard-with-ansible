@@ -1,7 +1,7 @@
 - hosts: master
   tasks:
     - name: Initialize the cluster
-      shell: kubeadm init --pod-network-cidr=10.244.0.0/16 >> init.txt
+      shell: kubeadm init > init.txt
 
     - name: Copy admin.conf to user's kube config
       shell: |
@@ -10,4 +10,6 @@
         chown $(id -u):$(id -g) $HOME/.kube/config
 
     - name: Install Pod network
-      shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml >> pod_network_setup.txt
+      shell: |
+        export kv=$(kubectl version | base64 | tr -d '\n')
+        kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kv"
