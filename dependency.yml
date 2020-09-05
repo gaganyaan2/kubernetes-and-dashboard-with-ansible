@@ -3,7 +3,7 @@
    - name: Install Docker
      yum:
        name: docker
-       state: present
+       state: latest
        update_cache: true
 
    - name: Start and enable Docker
@@ -12,8 +12,8 @@
        state: started
        enabled: yes
 
-   - name: Disable SELinux
-     command: setenforce 0
+  #  - name: Disable SELinux
+  #    command: setenforce 0 > /dev/null 2&>1
 
    - name: Disable SELinux on reboot
      selinux:
@@ -57,13 +57,13 @@
    - name: install kubelet
      yum:
         name: kubelet
-        state: present
+        state: latest
         update_cache: true
 
    - name: install kubeadm
      yum:
         name: kubeadm
-        state: present
+        state: latest
 
    - name: start and enable kubelet
      service:
@@ -76,7 +76,7 @@
    - name: install kubectl
      yum:
         name: kubelet
-        state: present
+        state: latest
 
    - name: start and enable and enable kubelet
      service:
